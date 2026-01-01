@@ -1,6 +1,7 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice} from "@reduxjs/toolkit";
+import { nanoid } from "nanoid";
 
-initialState = {
+const initialState = {
     list: []
 };
 
@@ -25,15 +26,17 @@ export const itemSlice = createSlice({
                         assignedTo: null,
                     }
                 };
-            },
+            }
+        },
 
-            removeItem: (state, action) => {
+        removeItem: (state, action) => {
                 state.list = state.list.filter(i => i.id !== action.payload);
-            },
-        }
+        },
 
     }
 });
+
+export const { addItem, removeItem } = itemSlice.actions
 
 
 export default itemSlice.reducer;
