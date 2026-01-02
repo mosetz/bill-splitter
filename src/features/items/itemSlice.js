@@ -9,15 +9,21 @@ export const itemSlice = createSlice({
     name: "items",
     initialState,
     reducers: {
+
         addItem: {
             reducer(state, action){
                 state.list.push(action.payload);
             },
 
-            prepare({name, unitPrice, qty}) {
+            /**
+             * This is a prepare state or pre-action factory use to build the payload before the reducer update the state
+             * @param {*} param0 
+             * @returns 
+             */
+            prepare({name, unitPrice, qty}) { 
                 return {
                     payload: {
-                        id: nanoid(),
+                        id: nanoid(), //nanoid() avoid bugs when deleting/reordering
                         name,
                         unitPrice,
                         qty,
@@ -30,8 +36,34 @@ export const itemSlice = createSlice({
         },
 
         removeItem: (state, action) => {
-                state.list = state.list.filter(i => i.id !== action.payload);
+            state.list = state.list.filter(i => i.id !== action.payload);
         },
+
+        updateQty: (state, action) => {
+            const {id , qty} = action.payload
+            const item = state.list.find(p => p.id === id)
+            if (item) {
+                item.qty = Math.max(1, qty);
+            }
+        },
+
+        incrementQty: (state, action) => {
+            const id = action.payload;
+            const item = state.list.find(p => p.id === id);
+
+            if(item) {
+                item.qty += 1
+            }
+        },
+
+        decrementQty: (state, action) => {
+            const id = action.payload;
+            const item = state.list.find(p => p.id === id);
+
+            if(item) {
+                item.qty = Math.max(1, item.qty - 1);
+            }
+        }
 
     }
 });
