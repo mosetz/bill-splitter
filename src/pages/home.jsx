@@ -46,19 +46,165 @@ export default function Home() {
             })
         );
         setItemName('');
-        setPersonName('');
-        setQty('');
+        setUnitPrice('');
+        setQty('1');
+    }
+
+    const handleRemovePerson = (id) => {
+        dispatch(removePerson(id));
+    }
+
+    const handleRemoveItems = (id) => {
+        dispatch(removeItem(id))
+    }
+
+    const handleIncreaseQty = (id) => {
+        dispatch(incrementQty(id))
+    }
+
+    const handleDecrementQty = (id) => {
+        dispatch(decrementQty(id))
     }
     
     return (
-        <>
-            <div>
-                <h1>This is a test</h1>
-                <p>test test</p>
+        
+            <div className="min-h-screen p-4 md:p-8 ">     
+                <div className="mx-auto max-w-6xl">
+                    <header className="mb-6">
+                        <h1 className="text-2xl md:text-3xl font-bold">Bill Splitter</h1>
+                        <p className="text-sm opacity-70">Add people and item first. We'll calculate split totals next.</p>
+                    </header>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {/* People Section*/}
+                        <section className="rounded-2xl border p-4 shadow-sm">
+                            <h2 className="text-lg font-semibold mb-3">People</h2>
+
+                            <div className="flex gap-2">
+                                <input type="text" 
+                                    className="w-full rounded-xl border px-4 py-2"
+                                    placeholder="e.g. John"
+                                    value={personName}
+                                    onChange={(e) => setPersonName(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if(e.key === "Enter") handleAddPerson();
+                                    }}
+                                />
+                                <button 
+                                    className="rounded-xl border px-3 py-2 font-medium disabled:opacity-40"
+                                    disabled={canAddPerson}
+                                    onClick={handleAddPerson}
+                                >
+                                    Add
+                                </button>
+                            </div>
+                            
+                            <div className="mt-4 space-y-2">
+                                {people.length === 0 ? (
+                                    <p className="text-sm opacity-60">No people yet</p>
+                                ) : (
+                                    people.map((p) => (
+                                        <div key={p.id} className="flex item-center justify-between rounded-xl border px-3 py-2">
+                                            <span className="truncate">{p.name}</span>
+                                            <button
+                                                className="text-sm underline opacity-80 hover:opacity-100"
+                                                onClick={() => handleRemovePerson(p.id)}
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </section>
+
+                        {/* Item section */}
+                        <section className="rounded-2xl border p-4 shadow-sm">
+                            <h2 className="text-lg font-semibold mb-3">Items</h2>
+
+                            <div className="space-y-2">
+                                <input type="text" 
+                                    className="w-full rounded-xl border px-3 py-2"
+                                    placeholder="Item name (e.g. Pizza)"
+                                    value={itemName}
+                                    onChange={(e) => setItemName(e.target.value)}
+                                />
+
+                                <div className="flex gap-2">
+                                    <input type="text" 
+                                        className="w-1/2 rounded-xl border px-3 py-2"
+                                        placeholder="Price"
+                                        inputMode="decimal"
+                                        value={unitPrice}
+                                        onChange={(e) => setUnitPrice(e.target.value)}
+                                    />
+
+                                    <input type="number" 
+                                        className="w-1/2 rounded-xl border px-3 py-2"
+                                        placeholder="Qty"
+                                        inputMode="numeric"
+                                        value={qty}
+                                        onChange={(e) => setQty(e.target.value)}
+                                    />
+                                </div>
+                                
+                                <button 
+                                    className="w-full rounded-xl border px-3 py-2 font-medium disabled:opacity-40"
+                                    disable={canAddItem}
+                                    onClick={handleAddItem}
+                                >
+                                    Add Item
+                                </button>
+                            </div>
+
+                            <div className="mt-2 space-y-2">
+                                {items.length === 0 ? (
+                                    <p className="text-sm opacity-60">No Items yet.</p>
+                                ) : (
+                                    items.map((item) => (
+                                        <div key={item.id} className="rounded-xl border px-3 py-2">
+                                            <div className="flex items-center justify-between gap-2">
+                                                <div className="min-w-0">
+                                                    <p className="font-medium truncate">{item.name}</p>
+                                                    <p className="text-sm opacity-70">
+                                                        {item.unitPrice.toFixed(2)} THB x {item.qty}
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    className="text-sm underline opacity-80 hover:opacity-100"
+                                                    onClick={() => handleRemoveItems(item.id)}
+                                                >
+                                                    Remove
+                                                </button>
+                                            </div>
+
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <button
+                                                    className="rounded-xl border px-3 py-1"
+                                                    onClick={() => handleDecrementQty(item.id)}
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="min-w-8 text-center">{item.qty}</span>
+                                                <button
+                                                    className="rounded-xl border px-3 py-1"
+                                                    onClick={() => handleIncreaseQty(item.id)}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
-        </>
     );
 }
+
 
 
 
