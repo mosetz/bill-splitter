@@ -68,7 +68,7 @@ export const itemSlice = createSlice({
     }
 });
 
-export const { addItem, removeItem } = itemSlice.actions
+export const { addItem, removeItem, incrementQty, decrementQty } = itemSlice.actions
 
 
 export default itemSlice.reducer;
