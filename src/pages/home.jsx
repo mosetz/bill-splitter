@@ -28,7 +28,7 @@ export default function Home() {
         const nameOk = itemName.trim().length > 0;
         const priceNum = Number(unitPrice);
         const qtyNum = Number(qty);
-        return nameOk && Number.isFinite(priceNum) && priceNum >= 0 && Number.isFinite(qtyNum) && qtyNum >= 0;
+        return nameOk && Number.isFinite(priceNum) && priceNum > 0 && Number.isFinite(qtyNum) && qtyNum >= 0;
     }, [itemName, unitPrice, qty])
 
     const handleAddPerson = () => {
@@ -92,7 +92,7 @@ export default function Home() {
                                 />
                                 <button 
                                     className="rounded-xl border px-3 py-2 font-medium disabled:opacity-40"
-                                    disabled={canAddPerson}
+                                    disabled={!canAddPerson}
                                     onClick={handleAddPerson}
                                 >
                                     Add
@@ -150,7 +150,7 @@ export default function Home() {
                                 
                                 <button 
                                     className="w-full rounded-xl border px-3 py-2 font-medium disabled:opacity-40"
-                                    disable={canAddItem}
+                                    disabled={!canAddItem}
                                     onClick={handleAddItem}
                                 >
                                     Add Item
