@@ -84,7 +84,7 @@ export default function BillSetting() {
                     onChange={(e) => dispatch(setCalculationPreset(e.target.value))}
                 >
                     <option value="DISC_FIRST">Discount → Service → VAT </option>
-                    <option className="text-black-800" value="SERVICE_FIRST">Service → Discount → VAT </option>
+                    <option value="SERVICE_FIRST">Service → Discount → VAT </option>
 
                 </select>
 
