@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import { addPerson, removePerson } from "../features/people/peopleSlice";
 import { addItem, removeItem, incrementQty, decrementQty } from "../features/items/itemSlice";
-
+import BillSetting from "../component/bill/BillSetting";
 export default function Home() {
     
     const dispatch = useDispatch()
@@ -201,16 +201,7 @@ export default function Home() {
                         </section>
 
                         {/* Result placeholder */}
-                        <section className="rounded-2xl border p-4 shadow-sm">
-                            <h2 className="text-lg font-semibold mb-3">Result</h2>
-                                <p className="text-sm opacity-70">
-                                    Next phase: VAT/service/discount + split modes + per-person totals
-                                </p>
-                                <div className="mt-4 rounded-xl border p-3 text-sm opacity-70">
-                                    People: {people.length} <br/>
-                                    Items: {items.length}
-                                </div>
-                        </section>
+                        <BillSetting />
                     </div>
                 </div>
             </div>

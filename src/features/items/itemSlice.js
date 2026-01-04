@@ -61,7 +61,7 @@ export const itemSlice = createSlice({
             const item = state.list.find(p => p.id === id);
 
             if(item) {
-                item.qty = Math.max(1, item.qty - 1);
+                item.qty = Math.max(1, item.qty - 1); //make sure the qty not less than 1
             }
         }
 
