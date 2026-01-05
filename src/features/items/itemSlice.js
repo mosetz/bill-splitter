@@ -1,6 +1,7 @@
 import { createSlice} from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";
 
+
 const initialState = {
     list: []
 };
@@ -63,8 +64,40 @@ export const itemSlice = createSlice({
             if(item) {
                 item.qty = Math.max(1, item.qty - 1); //make sure the qty not less than 1
             }
-        }
+        },
 
+        /**
+         * This reducer function take and id with a person id 
+         * First it find an item that match with id 
+         * @param {*} state 
+         * @param {*} action 
+         */
+        assignItemToPerson: (state, action) => {
+            const {itemId, personId} = action.payload
+            const item = state.list.find((i) => i.id === itemId);
+            if (item) {
+                item.assignedTo === personId;
+            }
+        },
+
+        /**
+         * This reducer function take id and splitMode that dispatch from a splitMode section in home.jsx
+         * It first find the item that match the id and then assign that item with that id with a splitMode "EQUAL" or "BY_ITEM"
+         * IF splitMode was set to "BY_ITEM" assign to assignTo with a null.
+         * @param {*} state 
+         * @param {*} action 
+         */
+        setItemSplitMode: (state, action) => {
+            const {id, splitMode} = action.payload;
+            const item = state.list.find(i => i.id === id)
+            if (item) {
+                state.splitMode = splitMode;
+                if (splitMode === "SHARED"){
+                    state.assignedTo = null;
+                }
+            }
+
+        }
     }
 });
 

@@ -5,7 +5,8 @@ const initialState = {
     vatMode: "INCLUDED",
     serviceRate: 10,
     calculationPreset: "Disc_FIRST",
-    currency: "THB"
+    currency: "THB",
+    splitMode: "EQUAL"
 }
 
 export const billSlice = createSlice({
@@ -18,7 +19,9 @@ export const billSlice = createSlice({
         },
 
         setVatMode: (state, action) => {
+            if (action.payload === "INCLUDED" || action.payload === "ADDED") {
             state.vatMode = action.payload;
+            }
         },
 
         setServiceRate: (state, action) => {
@@ -27,8 +30,13 @@ export const billSlice = createSlice({
 
         setCalculationPreset: (state, action) => {
             state.calculationPreset = action.payload
+        },
+        
+        setSplitMode: (state, action) => {
+            if (action.payload === "EQUAL" || action.payload === "BY_ITEM"){
+                state.splitMode = action.payload;
+            }
         }
-
 
     }
 
@@ -39,7 +47,8 @@ export const {
     setVatRate,
     setVatMode,
     setServiceRate,
-    setCalculationPreset
+    setCalculationPreset,
+    setSplitMode
 
 } = billSlice.actions;
 
