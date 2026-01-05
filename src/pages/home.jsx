@@ -26,7 +26,7 @@ export default function Home() {
      * It check if the input form is current valid if "true" it enable if "false" it disable
      * If one of these state are not valid it always return false 
      */
-    const canAddItem = useMemo(() => {
+    const canAddItem = useMemo(() => { //useMemo will remember the calculation and only rerender if on of the state change
         const nameOk = itemName.trim().length > 0;
         const priceNum = Number(unitPrice);
         const qtyNum = Number(qty);
