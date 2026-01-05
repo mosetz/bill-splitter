@@ -3,7 +3,7 @@ import { setSplitMode } from "../../features/bill/billSlice";
 
 export default function SplitModeSelector () {
 
-    const dispatch = useDispatch;
+    const dispatch = useDispatch();
     const splitMode = useSelector((state) => state.bill.splitMode);
 
     return (
@@ -15,6 +15,7 @@ export default function SplitModeSelector () {
                     <input 
                         type="radio"
                         checked={splitMode === "EQUAL"} 
+                        name="billSplitMode"
                         onChange={() => dispatch(setSplitMode("EQUAL"))}
                     />
                     <span>Split equally</span>
@@ -24,6 +25,7 @@ export default function SplitModeSelector () {
                     <input 
                         type="radio"
                         checked={splitMode === "BY_ITEM"} 
+                        name="billSplitMode"
                         onChange={() => dispatch(setSplitMode("BY_ITEM"))}
                     />
                     <span>Split by item</span>

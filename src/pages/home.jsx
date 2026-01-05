@@ -1,13 +1,15 @@
 import { useMemo, useState } from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import { addPerson, removePerson } from "../features/people/peopleSlice";
-import { addItem, removeItem, incrementQty, decrementQty } from "../features/items/itemSlice";
+import { addItem, removeItem, incrementQty, decrementQty, setItemSplitMode, assignItemToPerson } from "../features/items/itemSlice";
 import BillSetting from "../component/bill/BillSetting";
+import SplitModeSelector from "../component/split/SplitModeSelector";
 export default function Home() {
     
     const dispatch = useDispatch()
     const people = useSelector((state) => state.people.list);
     const items = useSelector((state) => state.items.list);
+    const billSplitMode = useSelector((state) => state.bill.splitMode)
 
     //people form
     const  [personName, setPersonName] = useState('');
@@ -15,7 +17,7 @@ export default function Home() {
     //item form
     const [itemName, setItemName] = useState('');
     const [unitPrice, setUnitPrice] = useState('');
-    const [qty, setQty] = useState(1);
+    const [qty, setQty] = useState("1");
 
     const canAddPerson = personName.trim().length > 0;
 
@@ -28,7 +30,7 @@ export default function Home() {
         const nameOk = itemName.trim().length > 0;
         const priceNum = Number(unitPrice);
         const qtyNum = Number(qty);
-        return nameOk && Number.isFinite(priceNum) && priceNum > 0 && Number.isFinite(qtyNum) && qtyNum >= 0;
+        return nameOk && Number.isFinite(priceNum) && priceNum > 0 && Number.isFinite(qtyNum) && qtyNum >= 1;
     }, [itemName, unitPrice, qty])
 
     const handleAddPerson = () => {
@@ -178,6 +180,33 @@ export default function Home() {
                                                 </button>
                                             </div>
 
+                                            {/* Split mode section */}
+                                            {billSplitMode === "BY_ITEM" && (
+                                                <div className="mt-2 space-y-2">
+                                                    <select
+                                                        className="w-full rounded-xl border px-3 py-2"
+                                                        value={item.splitMode}
+                                                        onChange={(e) => dispatch(setItemSplitMode({id: item.id, splitMode: e.target.value}))}
+                                                    >
+                                                        <option value="SHARED" name="itemSplitMode">Shared by everyone</option>
+                                                        <option value="ASSIGNED" name="itemSplitMode">Assigned to one person</option>
+                                                    </select>
+
+                                                    {item.splitMode === "ASSIGNED" && (
+                                                        <select
+                                                            className="w-full rounded-xl border px-3 py-2"
+                                                            value={item.assignedTo ?? ""}
+                                                            onChange={(e) => dispatch(assignItemToPerson({itemId: item.id, personId: e.target.value}))}
+                                                        >
+                                                            <option value="" disabled>Select person</option>
+                                                            {people.map((p) => (
+                                                                <option key={p.id} value={p.id}>{p.name}</option>
+                                                            ))}
+                                                        </select>
+                                                    )}
+                                                </div>
+                                            )}
+
                                             <div className="mt-2 flex items-center gap-2">
                                                 <button
                                                     className="rounded-xl border px-3 py-1"
@@ -202,6 +231,7 @@ export default function Home() {
 
                         {/* Result placeholder */}
                         <BillSetting />
+                        <SplitModeSelector />
                     </div>
                 </div>
             </div>

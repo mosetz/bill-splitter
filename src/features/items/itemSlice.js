@@ -101,7 +101,7 @@ export const itemSlice = createSlice({
     }
 });
 
-export const { addItem, removeItem, incrementQty, decrementQty } = itemSlice.actions
+export const { addItem, removeItem, incrementQty, decrementQty, setItemSplitMode, assignItemToPerson } = itemSlice.actions
 
 
 export default itemSlice.reducer;

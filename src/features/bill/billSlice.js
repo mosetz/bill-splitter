@@ -4,7 +4,7 @@ const initialState = {
     vatRate: 7,
     vatMode: "INCLUDED",
     serviceRate: 10,
-    calculationPreset: "Disc_FIRST",
+    calculationPreset: "DISC_FIRST",
     currency: "THB",
     splitMode: "EQUAL"
 }
