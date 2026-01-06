@@ -188,8 +188,8 @@ export default function Home() {
                                                         value={item.splitMode}
                                                         onChange={(e) => dispatch(setItemSplitMode({id: item.id, splitMode: e.target.value}))}
                                                     >
-                                                        <option value="SHARED" name="itemSplitMode">Shared by everyone</option>
-                                                        <option value="ASSIGNED" name="itemSplitMode">Assigned to one person</option>
+                                                        <option value="SHARED" >Shared by everyone</option>
+                                                        <option value="ASSIGNED" >Assigned to one person</option>
                                                     </select>
 
                                                     {item.splitMode === "ASSIGNED" && (
@@ -230,8 +230,10 @@ export default function Home() {
                         </section>
 
                         {/* Result placeholder */}
-                        <BillSetting />
-                        <SplitModeSelector />
+                        <section className="space-y-4">
+                            <BillSetting />
+                            <SplitModeSelector />
+                        </section>
                     </div>
                 </div>
             </div>
