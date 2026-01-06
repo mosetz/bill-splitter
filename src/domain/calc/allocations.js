@@ -4,10 +4,20 @@
  *  - SHARED : item cost is divided equally across people
  */
 
-export function allocateItemsToPeople( {item, people} ) {
+export function allocateItemsToPeople( {bill, items, people, grandTotal} ) {
+
+    const n = people?.length ?? 0;
+
+    const perPerson = 
+    n === 0
+    ? []
+    : people.map((p) => ({
+        personId: p.id,
+        name: p.name,
+        amountExact: grandTotal / n
+    }));
 
     //This will be implement on phase 3
-    return {
-        perPersonItems: {}, // personId -> array of item share
-    }
+    return { perPerson }
+       
 }

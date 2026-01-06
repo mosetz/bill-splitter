@@ -4,12 +4,15 @@ import { addPerson, removePerson } from "../features/people/peopleSlice";
 import { addItem, removeItem, incrementQty, decrementQty, setItemSplitMode, assignItemToPerson } from "../features/items/itemSlice";
 import BillSetting from "../component/bill/BillSetting";
 import SplitModeSelector from "../component/split/SplitModeSelector";
+import { computeBill } from "../domain/calc";
 export default function Home() {
     
     const dispatch = useDispatch()
     const people = useSelector((state) => state.people.list);
     const items = useSelector((state) => state.items.list);
+    const bill = useSelector((state) => state.bill);
     const billSplitMode = useSelector((state) => state.bill.splitMode)
+
 
     //people form
     const  [personName, setPersonName] = useState('');
@@ -20,6 +23,15 @@ export default function Home() {
     const [qty, setQty] = useState("1");
 
     const canAddPerson = personName.trim().length > 0;
+
+    /**
+     * This hook change every time when state in redux change (bill, items, people)
+     * computeBill (index.js) is a pure function which for calculate thing such as subTotal, grandTotal
+     * if return a object contain subtotal, discount, service, vat, grandTotal and so on
+     */
+    const preview = useMemo(() => {
+        return computeBill({bill, items, people});
+    }, [bill, items, people])
 
     /**
      * This hook use for control wether the button should be disable or enable
@@ -234,6 +246,15 @@ export default function Home() {
                             <BillSetting />
                             <SplitModeSelector />
                         </section>
+                        <div className="rounded-2xl border">
+                            <h2 className="text-lg font-semibold mb-3">Preview (Phase 2C)</h2>
+                            <p className="text-sm opacity-70">
+                                Subtotal: {preview.totals.subtotal.toFixed(2)} {preview.meta.currency}
+                            </p>
+                            <p className="text-sm opacity-70">
+                                Grand total: {preview.totals.grandTotal.toFixed(2)} {preview.meta.currency}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
