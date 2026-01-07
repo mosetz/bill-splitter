@@ -44,7 +44,12 @@ export function allocateItemsToPeople( {bill, items, people, grandTotal} ) {
 
         if (itemBase <= 0) continue;
 
-        const itemFinalCost = (itemBase / subTotal ) * grandTotal;
+        /**
+         * This line of code find a proportion like how big it is compare to other thing
+         * to find how big it was we need the price of that item / subtotal (no vat/service) * grandTotal (vat/service) include 
+         * this will give how big it was compare to other thing 
+         */
+        const itemFinalCost = ( itemBase / subTotal ) * grandTotal; 
 
         if (bill.splitMode === "EQUAL") {
              // everyone shares everything
