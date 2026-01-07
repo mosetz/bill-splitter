@@ -6,18 +6,68 @@
 
 export function allocateItemsToPeople( {bill, items, people, grandTotal} ) {
 
-    const n = people?.length ?? 0;
+    const n = people.length;
+    if (n === 0 || items.length === 0){
+        return {perPerson: []};
+    }
 
-    const perPerson = 
-    n === 0
-    ? []
-    : people.map((p) => ({
-        personId: p.id,
-        name: p.name,
-        amountExact: grandTotal / n
-    }));
+    // Compute subtotal again (food-only)
+    const subTotal = items.reduce((sum, it) => {
+        return sum + (Number(it.unitPrice) || 0) * (Number(it.qty) || 0); 
+    },0)
 
-    //This will be implement on phase 3
-    return { perPerson }
+    if (subTotal === 0){
+        return {
+            perPerson : people.map((p) => ({
+                personId: p.id,
+                name: p.name,
+                amountExact: 0,
+            })),
+        };
+    }
+
+    // Create buckets for each person
+    const buckets = [];
+    for (const p of people){
+        buckets[p.id] = {
+            personId: p.id,
+            name: p.name,
+            amountExact: 0,
+        };
+    }
+
+    //Allocate each item
+    for (const item of items) {
+        const unit = Number(item.unitPrice) || 0;
+        const qty = Number(item.qty) || 0;
+        const itemBase = unit * qty;
+
+        if (itemBase <= 0) continue;
+
+        const itemFinalCost = (itemBase / subTotal ) * grandTotal;
+
+        if (bill.splitMode === "EQUAL") {
+             // everyone shares everything
+            const share = itemFinalCost / n;
+            for (const p of people){
+                buckets[p.id].amountExact += share;
+            }
+        } else {
+            // BY_ITEM
+            if (item.splitMode === "ASSIGNED" && item.assignedTo) {
+                buckets[item.assignedTo].amountExact += itemFinalCost;
+            } else {
+                //SHARED or missing assignment -> shared fallback
+                const share = itemFinalCost / n;
+                for (const p of people){
+                    buckets[p.id].amountExact += share
+                }
+            }
+        }
+    }
+
+    return {
+        perPerson: Object.values(buckets),
+    }
        
 }
