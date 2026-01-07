@@ -2,7 +2,8 @@ import { allocateItemsToPeople } from './allocations'
 import { roundedAndDistribute } from './rounding'
 
 function percentToDecimal(rate) {
-    return rate/100;
+    const r = Number(rate);
+    return Number.isFinite(r) ? r / 100 : 0;
 }
 
 /**
@@ -23,22 +24,56 @@ export function computeBill({bill, items, people}) {
         return sum + unit * qty
     },0)
 
-    /**
-     * On this phase which is not phase 2c we don't calculate discount or vat or service yet
-     * Just carry a place holder so the output contract is stable
-     * 
-    */
+    
     const discount = 0;
-    const service = subtotal * percentToDecimal(bill.serviceRate ?? 0);
-    const vat = 0;
-    const grandTotal = subtotal + service;
+
+    const vatRate = percentToDecimal(bill.vatRate ?? 0);
+    const serviceRate = percentToDecimal(bill.serviceRate ?? 0);
+
+    //Step 1 : amount after discount on this phase (let it be 0 for now)
+    let afterDiscount = subtotal - discount;
+    if (afterDiscount < 0) afterDiscount = 0;
+
+    /**
+     * Step 2 : service charge
+     * For now, discount is 0 so preset won't change result,
+     * but we keep structure ready for when added a discount later
+     */
+    let service = 0; //Service is like a restaurant tax pay added up from total cost 
+
+    if (bill.calculationPreset === "SERVICE_FIRST") {
+        service = subtotal * serviceRate; // discount would happen after service later
+    } else {
+        service = afterDiscount * serviceRate; //discount first then service
+    }
+
+    //Step 3 : amount that VAT is applied to / extracted from
+    const preVatAmount = afterDiscount + service;
 
 
-    //allocation step
-    const allocation = allocateItemsToPeople({bill, items, people, grandTotal});
+    //Step 4: Vat by mode
+    let vat = 0;
+    let grandTotal = 0;
 
+    if (bill.vatMode === "ADDED") {
+        vat = preVatAmount * vatRate;
+        grandTotal = preVatAmount + vat;
+    } else if (bill.vatMode === "INCLUDED"){
+         // preVatAmount already includes VAT. Extract the VAT portion.
+        if (vatRate > 0) {
+            const net = preVatAmount / (1 + vatRate); //Think of total net price 100 government will add 7 unit in to it so it will be 107/100 = 1.07
+            vat = preVatAmount - net;
+        } else { 
+        vat = 0;
+        }
+        
+        grandTotal = preVatAmount;
+    }  else {
+        vat = 0;
+        grandTotal = preVatAmount;
+    }
 
-    //rounding step
+    const allocation = allocateItemsToPeople({ bill, items, people, grandTotal });
     const perPersonRounded = roundedAndDistribute(allocation.perPerson ?? []);
 
 
