@@ -100,4 +100,79 @@ describe("allocateItemsToPeople", () => {
 
     });
 
+    it("BY_ITEM + SHARED: shared item splits across people", () => {
+        const people = [
+            {id: "p1", name:"Alice"},
+            {id: "p2", name: "Bob"},
+            {id: "p3", name: "Chris"},
+        ];
+
+        const items = [
+            {id: "i1", unitPrice: 300, qty: 1, splitMode: "SHARED"},
+        ];
+
+        const res = allocateItemsToPeople({
+            bill: bill({splitMode: "BY_ITEM"}),
+            people,
+            items,
+            grandTotal: 300,
+        });
+
+        const a = res.perPerson.find(p => p.personId === "p1").amountExact;
+        const b = res.perPerson.find(p => p.personId === "p2").amountExact;
+        const c = res.perPerson.find(p => p.personId === "p3").amountExact;
+
+        expect(a).toBeCloseTo(100);
+        expect(b).toBeCloseTo(100);
+        expect(c).toBeCloseTo(100);
+    });
+
+    it("BY_ITEM: assignedTo missing person falls back to SHARED", () => {
+        const people = [
+            {id: "p1", name: "Alice"},
+            {id: "p2", name: "Bob"},
+        ];
+
+        const items = [
+            {id: "i1", unitPrice: 100, qty: 1, splitMode: "ASSIGNED" , assignedTo: "p999"}
+        ];
+
+        const res = allocateItemsToPeople({
+            bill: bill({ splitMode: "BY_ITEM" }),
+            people,
+            items,
+            grandTotal: 100,
+        });
+
+        const a = res.perPerson.find(p => p.personId === "p1").amountExact;
+        const b = res.perPerson.find(p => p.personId === "p2").amountExact;
+
+        expect(a).toBeCloseTo(50);
+        expect(b).toBeCloseTo(50);
+    });
+
+    it("return a array with amountExact when subTotal = 0", () => {
+        const people = [
+            {id: 'p1', name: "Alice"},
+            {id: 'p2', name: "Bob"},
+        ];
+
+        const items = [
+            {id: "i1", name:"pizza", unitPrice: 0, qty: 1, splitMode: "SHARED"}
+        ];
+
+        const res = allocateItemsToPeople({
+            bill: bill({splitMode: "EQUAL"}),
+            people,
+            items,
+            grandTotal: 300,
+        });
+
+        const a = res.perPerson.find(p => p.personId === 'p1').amountExact;
+        const b =  res.perPerson.find(p => p.personId === 'p2').amountExact;
+
+        expect(a).toBeCloseTo(0);
+        expect(b).toBeCloseTo(0);
+    })
+
 });

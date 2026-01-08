@@ -59,7 +59,7 @@ export function allocateItemsToPeople( {bill, items, people, grandTotal} ) {
             }
         } else {
             // BY_ITEM
-            if (item.splitMode === "ASSIGNED" && item.assignedTo) {
+            if (item.splitMode === "ASSIGNED" && item.assignedTo && buckets[item.assignedTo]) {
                 buckets[item.assignedTo].amountExact += itemFinalCost;
             } else {
                 //SHARED or missing assignment -> shared fallback
