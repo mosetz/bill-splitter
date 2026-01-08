@@ -29,6 +29,7 @@ export function computeBill({bill, items, people}) {
 
     const vatRate = percentToDecimal(bill.vatRate ?? 0);
     const serviceRate = percentToDecimal(bill.serviceRate ?? 0);
+    const vatBase = bill.vatBase ?? "FOOD_PLUS_SERVICE";
 
     //Step 1 : amount after discount on this phase (let it be 0 for now)
     let afterDiscount = subtotal - discount;
@@ -49,20 +50,22 @@ export function computeBill({bill, items, people}) {
 
     //Step 3 : amount that VAT is applied to / extracted from
     const preVatAmount = afterDiscount + service;
+    const vatBaseAmount = vatBase === "FOOD_ONLY" ? afterDiscount : preVatAmount;
 
 
     //Step 4: Vat by mode
     let vat = 0;
     let grandTotal = 0;
 
+    
     if (bill.vatMode === "ADDED") {
-        vat = preVatAmount * vatRate;
+        vat = vatBaseAmount * vatRate;
         grandTotal = preVatAmount + vat;
     } else if (bill.vatMode === "INCLUDED"){
          // preVatAmount already includes VAT. Extract the VAT portion.
         if (vatRate > 0) {
-            const net = preVatAmount / (1 + vatRate); //Think of total net price 100 government will add 7 unit in to it so it will be 107/100 = 1.07
-            vat = preVatAmount - net;
+            const net = vatBaseAmount/ (1 + vatRate); //Think of total net price 100 government will add 7 unit in to it so it will be 107/100 = 1.07
+            vat = vatBaseAmount - net;
         } else { 
         vat = 0;
         }

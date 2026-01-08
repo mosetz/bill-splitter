@@ -6,7 +6,7 @@ function baseBill (override = {}) {
         vatRate: 7,
         vatMode: "ADDED",
         serviceRate: 10,
-        calculatePreset: "DISC_FIRST",
+        calculationPreset: "DISC_FIRST",
         currency: "THB",
         splitMode: "EQUAL",
         ...override
@@ -64,5 +64,5 @@ describe("computeBill VAT", () => {
         expect(res.totals.vat).toBeCloseTo(7.7);
         expect(res.totals.service).toBeCloseTo(10);
         expect(res.totals.grandTotal).toBeCloseTo(117.7);
-    })
+    });
 })

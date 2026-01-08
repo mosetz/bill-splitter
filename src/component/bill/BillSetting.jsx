@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { setVatMode, setVatRate, setServiceRate, setCalculationPreset } from "../../features/bill/billSlice";
+import { setVatMode, setVatRate, setServiceRate, setCalculationPreset, setVatBase } from "../../features/bill/billSlice";
 
 export default function BillSetting() {
 
@@ -58,6 +58,35 @@ export default function BillSetting() {
                             onChange={() => dispatch(setVatMode("ADDED"))}
                         />
                         <span className="text-sm">Added</span>
+                    </label>
+                </div>
+            </div>
+
+            <div className="mb-3">
+                <p className="block text-sm font-medium mb-1">Vat applies to:</p>
+                <div className="flex gap-3">
+                    <label 
+                        className="flex items-center gap-2"
+                    >
+                        <input 
+                            type="radio"
+                            name="vatBase"
+                            checked={bill.vatBase === "FOOD_ONLY"}
+                            onChange={() => dispatch(setVatBase("FOOD_ONLY"))}
+                        />
+                        <span className="text-sm">Food only</span>
+                    </label>
+
+                    <label  
+                        className="flex item-center gap-2"
+                    >
+                        <input 
+                            type="radio"
+                            name="vatBase"
+                            checked={bill.vatBase === "FOOD_PLUS_SERVICE"} 
+                            onChange={() => dispatch(setVatBase("FOOD_PLUS_SERVICE"))}
+                        />
+                        <span className="text-sm">Food + service</span>
                     </label>
                 </div>
             </div>
