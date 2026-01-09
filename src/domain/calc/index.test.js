@@ -65,4 +65,49 @@ describe("computeBill VAT", () => {
         expect(res.totals.service).toBeCloseTo(10);
         expect(res.totals.grandTotal).toBeCloseTo(117.7);
     });
+
+    it("VAT ADDED + FOOD_PLUS_SERVICE: VAT taxes service too", () => {
+        const people = [
+            {id: "p1", name: "Alice"},
+        ];
+
+        const items = [{id: "i1", unitPrice: 100, qty: 1}];
+
+        const res = computeBill({
+            bill: baseBill({
+                vatMode: "ADDED",
+                vatBase: "FOOD_PLUS_SERVICE",
+                vatRate: 7,
+                serviceRate: 10,
+            }),
+            people,
+            items,
+        });
+
+        expect(res.totals.subtotal).toBeCloseTo(100);
+        expect(res.totals.service).toBeCloseTo(10);
+        expect(res.totals.vat).toBeCloseTo(7.7);
+        expect(res.totals.grandTotal).toBeCloseTo(117.7);
+    });
+
+    it("VAT ADDED + FOOD_ONLY: VAT dose NOT tax service", () => {
+        const people = [{id: "p1", name: "Bob"}];
+        const items = [{id: "i1", unitPrice:100, qty: 1}];
+
+        const res = computeBill({
+            bill: baseBill({
+                vatMode: "ADDED",
+                vatBase: "FOOD_ONLY",
+                vatRate: 7,
+                serviceRate: 10,
+            }),
+            people,
+            items,
+        });
+
+        expect(res.totals.subtotal).toBeCloseTo(100);
+        expect(res.totals.service).toBeCloseTo(10);
+        expect(res.totals.vat).toBeCloseTo(7);
+        expect(res.totals.grandTotal).toBeCloseTo(117);
+    });
 })
