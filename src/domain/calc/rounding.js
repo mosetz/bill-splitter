@@ -6,6 +6,13 @@
 
 export function roundedAndDistribute (perPerson) {
 
+    /**
+     * perPerson is a array pass from allocation it contain object that look like this
+     * {personId, "p1", name: "alice" , amountExact: 0}
+     */
+
+
+    //First check if array exist or not
     const rows = Array.isArray(perPerson) ? perPerson : [];
     if(rows.length === 0) return [];
 

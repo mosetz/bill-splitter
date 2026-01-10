@@ -8,14 +8,16 @@ function sumRounded (rows) {
 describe("roundedAndDistribute", () => {
     it("rounds to 2dp for each person", () => {
         const input = [
-            {perPersonId: "p1", amountExact: 10.129},
-            {perPersonId: "p2", amountExact: 20.555},
+            {personId: "p1", amountExact: 10.129},
+            {personId: "p2", amountExact: 20.555},
         ];
 
         const out = roundedAndDistribute(input);
 
-        expect(out.find(p => p.perPersonId === "p1").amountRounded).toBeCloseTo(10.13);
-        expect(out.find(p => p.perPersonId === 'p2').amountRounded).toBeCloseTo(20.56);
+        expect(out.find(p => p.personId === "p1").amountRounded).toBeCloseTo(10.13);
+        expect(out.find(p => p.personId === 'p2').amountRounded).toBeCloseTo(20.55);
+
+        expect(sumRounded(out)).toBeCloseTo(30.68);
     });
 
     it("distributes leftover cent so totals match the rounded grand total", () => {
