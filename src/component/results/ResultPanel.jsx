@@ -2,6 +2,13 @@ import { useMemo } from "react";
 import { useSelector} from 'react-redux'
 import { computeBill } from "../../domain/calc/index";
 
+
+/**
+ * Helper function for formatting money value
+ * @param {*} n 
+ * @param {*} currency 
+ * @returns 
+ */
 function money (n, currency = "THB") {
     const num = Number(n) || 0
     return `${num.toFixed(2)} ${currency}`

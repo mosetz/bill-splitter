@@ -110,4 +110,25 @@ describe("computeBill VAT", () => {
         expect(res.totals.vat).toBeCloseTo(7);
         expect(res.totals.grandTotal).toBeCloseTo(117);
     });
+
+    it("Percent discount reduce base before service when DISC_FIRST", () => {
+        const people = [{id: "p1", name: "Alice",}];
+        const items = [{id: "i1", unitPrice: 100, qty: 1}];
+
+        const res = computeBill({
+            bill: baseBill({
+                serviceRate: 10,
+                vatRate: 0,
+                vatMode: "ADDED",
+                calculationPreset: "DISC_FIRST",
+                discount: {mode: "PERCENT", value: 10,}
+            }),
+            people,
+            items
+        });
+
+        expect(res.totals.discount).toBeCloseTo(10);
+        expect(res.totals.service).toBeCloseTo(9);
+        expect(res.totals.grandTotal).toBeCloseTo(99);
+    });
 })

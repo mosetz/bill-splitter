@@ -6,6 +6,24 @@ function percentToDecimal(rate) {
     return Number.isFinite(r) ? r / 100 : 0;
 }
 
+function computeDiscountAmount(subTotal, discount) {
+    if (!discount || discount.mode === "NONE" ) return 0;
+
+    const value = Number(discount.value) || 0;
+    if (value <= 0) return 0;
+
+    if (discount.mode === "PERCENT") {
+        // 10 means 10%
+        return subTotal * (value / 100);
+    }
+
+    if (discount.mode === "FIXED") {
+        return Math.min(subTotal, value); // don’t discount more than subtotal
+    }
+
+    return 0;
+}
+
 /**
  * Main entry later:
  * computeBill(billSettings, items, people) -> per-person breakdown
@@ -25,7 +43,7 @@ export function computeBill({bill, items, people}) {
     },0)
 
     
-    const discount = 0;
+    const discount = computeDiscountAmount(subtotal, bill.discount);
 
     const vatRate = percentToDecimal(bill.vatRate ?? 0);
     const serviceRate = percentToDecimal(bill.serviceRate ?? 0);

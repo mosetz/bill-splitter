@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { setVatMode, setVatRate, setServiceRate, setCalculationPreset, setVatBase } from "../../features/bill/billSlice";
+import { setVatMode, setVatRate, setServiceRate, setCalculationPreset, setVatBase, setDiscountMode, setDiscountValue } from "../../features/bill/billSlice";
 
 export default function BillSetting() {
 
@@ -102,6 +102,57 @@ export default function BillSetting() {
                     value={bill.serviceRate}
                     onChange={onServiceRateChange}
                 />
+            </div>
+
+            {/* Discount panel */}
+            <div className="mb-3">
+                <p className="block text-sm font-medium mb-1">Discount</p>
+
+                <div className="flex gap-3 mb-2">
+                    <label className="flex items-center gap-2">
+                        <input type="radio" 
+                            name="discountMode"
+                            checked={bill.discount.mode === "NONE"}
+                            onChange={() => dispatch(setDiscountMode("NONE"))}
+                        />
+                        <span className="text-sm">None</span>
+                    </label>
+
+                    <label className="flex items-center gap-2">
+                        <input type="radio"
+                            name="discountMode"
+                            checked={bill.discount.mode === "PERCENT"}
+                            onChange={() => dispatch(setDiscountMode("PERCENT"))}
+                        />
+                        <span className="text-sm">Percent</span>
+                    </label>
+
+                    <label className="flex items-center gap-2">
+                        <input type="radio"
+                            name="discountMode"
+                            checked={bill.discount.mode === "FIXED"}
+                            onChange={() => dispatch(setDiscountMode("FIXED"))}
+                        />
+                        <span className="text-sm">Fixed</span>
+                    </label>
+                </div>
+
+                {bill.discount.mode !== "NONE" && (
+                    <input 
+                        className="w-full rounded-xl border px-3 py-2"
+                        type="number" 
+                        min="0"
+                        step="0.01"
+                        value={bill.discount.value}
+                        onChange={(e) => dispatch(setDiscountValue(e.target.value))}
+                        placeholder={bill.discount.mode === "PERCENT" ? "Discount % (e.g. 10)" : `Discount amount (${bill.currency})`}
+                    />
+                )}
+
+                <p className="mt-2 text-xs opacity-70">
+                    Discount is applied according to the order preset (Discount → Service → VAT or Service → Discount → VAT).
+                </p>
+
             </div>
 
             {/* order preset */}
