@@ -10,7 +10,6 @@ export default function Home() {
     const dispatch = useDispatch()
     const people = useSelector((state) => state.people.list);
     const items = useSelector((state) => state.items.list);
-    const bill = useSelector((state) => state.bill);
     const billSplitMode = useSelector((state) => state.bill.splitMode)
 
 

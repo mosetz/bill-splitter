@@ -52,16 +52,16 @@ export const billSlice = createSlice({
         },
 
         setDiscountMode: (state, action) => {
-           const m = action.payload;
-           if(m === "NONE" || m === "PERCENT" || m === "FIXED") {
-                state.discount.mode = m
+           const mode = action.payload;
+           if(mode === "NONE" || mode === "PERCENT" || mode === "FIXED") {
+                state.discount.mode = mode
            }
-           if (m === "NONE") state.discount.value = 0;
+           if (mode === "NONE") state.discount.value = 0;
         },
 
         setDiscountValue: (state, action) => {
-            const v = Number(action.payload);
-            state.discount.value = Number.isFinite(v) ? Math.max(0, v) : 0;
+            const value = Number(action.payload);
+            state.discount.value = Number.isFinite(value) ? Math.max(0, value) : 0;
         }
 
     }
