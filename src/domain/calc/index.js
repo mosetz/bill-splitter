@@ -25,8 +25,10 @@ function computeDiscountAmount(subTotal, discount) {
 }
 
 /**
- * Main entry later:
- * computeBill(billSettings, items, people) -> per-person breakdown
+ * Main entry use to compute bill totals, service, vat then pass those to calculate per person amount
+ * and send back warnings if any setup is incomplete
+ * then return an object containing totals, perPerson breakdown and meta info
+ * to render the bill in resultPanel
  */
 export function computeBill({bill, items, people}) {
 

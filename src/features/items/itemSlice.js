@@ -2,6 +2,7 @@ import { createSlice} from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";
 
 
+
 const initialState = {
     list: []
 };
@@ -28,9 +29,12 @@ export const itemSlice = createSlice({
                         name,
                         unitPrice,
                         qty,
-                        discount: null,
                         splitMode: "SHARED",
                         assignedTo: null,
+                        discount: {
+                            mode: "NONE", //mode: "NONE" | "PERCENT" | "FIXED"
+                            value: 0,
+                        }
                     }
                 };
             }
@@ -85,19 +89,50 @@ export const itemSlice = createSlice({
          */
         setItemSplitMode: (state, action) => {
             const {id, splitMode} = action.payload;
-            const item = state.list.find((i) => i.id === id)
+            const item = state.list.find((i) => i.id === id);
             if (item) {
                 item.splitMode = splitMode;
                 if (splitMode === "SHARED"){
-                    state.assignedTo = null;
+                    item.assignedTo = null;
                 }
             }
 
+        },
+
+        setItemDiscountMode: (state, action) => {
+            const {id, mode} = action.payload
+            const item = state.list.find((i) => i.id === id);
+            if (!item) return;
+
+            if (mode === "NONE" || mode === "PERCENT" || mode === "FIXED") {
+                item.discount.mode = mode
+                if (mode === "NONE") item.discount.value = 0;
+            }
+        },
+
+        setItemDiscountValue: (state, action) => {
+            const {id, value} = action.payload
+            const item = state.list.find((p) => p.id === id);
+
+            if (!item) return
+            const v = Number(value);
+            item.discount.value = Number.isFinite(v) ? Math.max(0, v) : 0;
         }
     }
 });
 
-export const { addItem, removeItem, incrementQty, decrementQty, setItemSplitMode, assignItemToPerson } = itemSlice.actions
+export const { 
+    
+    addItem, 
+    removeItem, 
+    incrementQty, 
+    decrementQty, 
+    setItemSplitMode, 
+    assignItemToPerson,
+    setItemDiscountMode,
+    setItemDiscountValue
+
+} = itemSlice.actions
 
 
 export default itemSlice.reducer;

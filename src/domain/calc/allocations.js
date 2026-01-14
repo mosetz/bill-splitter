@@ -6,8 +6,8 @@
 
 export function allocateItemsToPeople( {bill, items, people, grandTotal} ) {
 
-    const n = people.length;
-    if (n === 0 || items.length === 0){
+    const numberOfPeople = people.length;
+    if (numberOfPeople === 0 || items.length === 0){
         return {perPerson: []};
     }
 
@@ -53,7 +53,7 @@ export function allocateItemsToPeople( {bill, items, people, grandTotal} ) {
 
         if (bill.splitMode === "EQUAL") {
              // everyone shares everything
-            const share = itemFinalCost / n;
+            const share = itemFinalCost / numberOfPeople;
             for (const p of people){
                 buckets[p.id].amountExact += share;
             }
@@ -63,7 +63,7 @@ export function allocateItemsToPeople( {bill, items, people, grandTotal} ) {
                 buckets[item.assignedTo].amountExact += itemFinalCost;
             } else {
                 //SHARED or missing assignment -> shared fallback
-                const share = itemFinalCost / n;
+                const share = itemFinalCost / numberOfPeople;
                 for (const p of people){
                     buckets[p.id].amountExact += share
                 }

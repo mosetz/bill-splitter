@@ -16,10 +16,7 @@ function baseBill (override = {}) {
 describe("computeBill VAT", () => {
 
     it("VAT ADDED: adds vat on top", () => {
-        const people = [
-            {id: "p1", name: "Alice"},
-        ];
-
+        const people = [{id: "p1", name: "Alice"}];
         const items = [{id: 'i1', unitPrice: 100, qty: 1}];
 
         const res = computeBill({
@@ -67,10 +64,7 @@ describe("computeBill VAT", () => {
     });
 
     it("VAT ADDED + FOOD_PLUS_SERVICE: VAT taxes service too", () => {
-        const people = [
-            {id: "p1", name: "Alice"},
-        ];
-
+        const people = [{id: "p1", name: "Alice"}];
         const items = [{id: "i1", unitPrice: 100, qty: 1}];
 
         const res = computeBill({
